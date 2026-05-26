@@ -23,8 +23,6 @@
     box-shadow: 0 25px 60px rgba(0,0,0,0.35);
     height: fit-content;
   }
-
-  /* Top screen */
   #top { text-align: center; padding: 12px 0; }
   .top-icon { font-size: 52px; margin-bottom: 12px; }
   .top-title { font-size: 24px; font-weight: 800; color: #1e293b; margin-bottom: 4px; }
@@ -39,10 +37,7 @@
     color: #334155; cursor: pointer; font-family: inherit;
     transition: all 0.15s; line-height: 1.4;
   }
-  .subject-btn.selected {
-    background: #eff6ff; border-color: #3b82f6; color: #1d4ed8;
-  }
-  .subject-btn:active { opacity: 0.8; }
+  .subject-btn.selected { background: #eff6ff; border-color: #3b82f6; color: #1d4ed8; }
   .count-row { display: flex; gap: 10px; justify-content: center; margin-bottom: 24px; }
   .count-btn {
     padding: 10px 24px; border-radius: 99px; border: 1.5px solid #e2e8f0;
@@ -54,12 +49,9 @@
     width: 100%; padding: 16px;
     background: linear-gradient(90deg, #1e3a5f, #2563eb);
     color: #fff; border: none; border-radius: 12px;
-    font-size: 16px; font-weight: 700; cursor: pointer;
-    font-family: inherit;
+    font-size: 16px; font-weight: 700; cursor: pointer; font-family: inherit;
   }
   .start-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-
-  /* Loading */
   #loading { text-align: center; padding: 40px 0; display: none; }
   .spinner {
     width: 48px; height: 48px; border: 4px solid #e2e8f0;
@@ -69,8 +61,6 @@
   @keyframes spin { to { transform: rotate(360deg); } }
   .loading-text { font-size: 15px; color: #64748b; font-weight: 600; }
   .loading-sub { font-size: 13px; color: #94a3b8; margin-top: 6px; }
-
-  /* Error */
   #error { display: none; text-align: center; padding: 20px 0; }
   .error-icon { font-size: 40px; margin-bottom: 10px; }
   .error-text { font-size: 14px; color: #dc2626; margin-bottom: 16px; line-height: 1.6; }
@@ -79,8 +69,6 @@
     border: none; border-radius: 10px; font-size: 14px;
     font-weight: 700; cursor: pointer; font-family: inherit;
   }
-
-  /* Quiz */
   #quiz { display: none; }
   .header { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
   .tag {
@@ -110,7 +98,6 @@
     border: 1.5px solid #e2e8f0; background: #f8fafc;
     color: #1e293b; font-family: inherit; font-weight: 500; width: 100%;
   }
-  .choice-btn:active { opacity: 0.8; }
   .choice-label {
     display: inline-flex; align-items: center; justify-content: center;
     min-width: 24px; height: 24px; border-radius: 6px;
@@ -134,8 +121,6 @@
     font-size: 15px; font-weight: 700; cursor: pointer;
     font-family: inherit; display: none;
   }
-
-  /* Result */
   #result { display: none; }
   .result-header { text-align: center; margin-bottom: 24px; }
   .result-icon { font-size: 48px; display: block; margin-bottom: 8px; }
@@ -177,12 +162,11 @@
 <body>
 <div class="card">
 
-  <!-- Top -->
   <div id="top">
     <div class="top-icon">📊</div>
     <h1 class="top-title">FP3級 練習問題</h1>
     <p class="top-sub">AIが毎回ランダムに問題を生成します</p>
-    <div class="subject-grid" id="subject-grid">
+    <div class="subject-grid">
       <button class="subject-btn selected" data-value="ライフプランニング・資金計画" onclick="selectSubject(this)">📅 ライフプランニング<br>・資金計画</button>
       <button class="subject-btn" data-value="リスク管理（保険）" onclick="selectSubject(this)">🛡️ リスク管理<br>（保険）</button>
       <button class="subject-btn" data-value="金融資産運用" onclick="selectSubject(this)">📈 金融資産運用</button>
@@ -195,24 +179,21 @@
       <button class="count-btn" data-value="5" onclick="selectCount(this)">5問</button>
       <button class="count-btn" data-value="10" onclick="selectCount(this)">10問</button>
     </div>
-    <button class="start-btn" id="start-btn" onclick="startQuiz()">問題を生成する ✨</button>
+    <button class="start-btn" onclick="startQuiz()">問題を生成する ✨</button>
   </div>
 
-  <!-- Loading -->
   <div id="loading">
     <div class="spinner"></div>
     <p class="loading-text">問題を生成中...</p>
     <p class="loading-sub">AIが問題を作っています、少々お待ちください</p>
   </div>
 
-  <!-- Error -->
   <div id="error">
     <div class="error-icon">⚠️</div>
-    <p class="error-text" id="error-msg">問題の生成に失敗しました。<br>もう一度お試しください。</p>
+    <p class="error-text" id="error-msg">問題の生成に失敗しました。</p>
     <button class="retry-btn" onclick="showTop()">トップに戻る</button>
   </div>
 
-  <!-- Quiz -->
   <div id="quiz">
     <div class="header">
       <span class="tag">FP3級</span>
@@ -229,7 +210,6 @@
     <button class="next-btn" id="next-btn" onclick="nextQuestion()">次の問題へ →</button>
   </div>
 
-  <!-- Result -->
   <div id="result">
     <div class="result-header">
       <span class="result-icon" id="result-icon"></span>
@@ -250,56 +230,59 @@
 </div>
 
 <script>
-let selectedSubject = "ライフプランニング・資金計画";
-let selectedCount = 3;
-let questions = [];
-let current = 0;
-let answered = false;
-let userAnswers = [];
-const labels = ["ア", "イ", "ウ"];
+  // ★ここにGemini APIキーを貼り付けてください★
+  const GEMINI_API_KEY = "AIzaSyDRrxESkBAEwcEhwlE2-VLsSATf3qXNqs4";
 
-function selectSubject(btn) {
-  document.querySelectorAll(".subject-btn").forEach(b => b.classList.remove("selected"));
-  btn.classList.add("selected");
-  selectedSubject = btn.dataset.value;
-}
+  let selectedSubject = "ライフプランニング・資金計画";
+  let selectedCount = 3;
+  let questions = [];
+  let current = 0;
+  let answered = false;
+  let userAnswers = [];
+  const labels = ["ア", "イ", "ウ"];
 
-function selectCount(btn) {
-  document.querySelectorAll(".count-btn").forEach(b => b.classList.remove("selected"));
-  btn.classList.add("selected");
-  selectedCount = parseInt(btn.dataset.value);
-}
-
-function show(id) {
-  ["top","loading","error","quiz","result"].forEach(s => {
-    document.getElementById(s).style.display = s === id ? (s === "top" || s === "result" ? "block" : "block") : "none";
-  });
-}
-
-function showTop() { show("top"); }
-
-async function startQuiz() {
-  show("loading");
-  try {
-    questions = await generateQuestions(selectedSubject, selectedCount);
-    current = 0;
-    answered = false;
-    userAnswers = [];
-    show("quiz");
-    render();
-  } catch(e) {
-    document.getElementById("error-msg").textContent = "問題の生成に失敗しました。\n" + e.message;
-    show("error");
+  function selectSubject(btn) {
+    document.querySelectorAll(".subject-btn").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    selectedSubject = btn.dataset.value;
   }
-}
 
-async function generateQuestions(subject, count) {
-  const prompt = `FP3級（ファイナンシャルプランニング技能士3級）の「${subject}」分野から、三択問題を${count}問作成してください。
+  function selectCount(btn) {
+    document.querySelectorAll(".count-btn").forEach(b => b.classList.remove("selected"));
+    btn.classList.add("selected");
+    selectedCount = parseInt(btn.dataset.value);
+  }
 
-以下の条件を守ってください：
+  function show(id) {
+    ["top","loading","error","quiz","result"].forEach(s => {
+      document.getElementById(s).style.display = s === id ? "block" : "none";
+    });
+  }
+
+  function showTop() { show("top"); }
+
+  async function startQuiz() {
+    show("loading");
+    try {
+      questions = await generateQuestions(selectedSubject, selectedCount);
+      current = 0;
+      answered = false;
+      userAnswers = [];
+      show("quiz");
+      render();
+    } catch(e) {
+      document.getElementById("error-msg").textContent = "問題の生成に失敗しました。\n" + e.message;
+      show("error");
+    }
+  }
+
+  async function generateQuestions(subject, count) {
+    const prompt = `FP3級（ファイナンシャルプランニング技能士3級）の「${subject}」分野から、三択問題を${count}問作成してください。
+
+条件：
 - 実際のFP3級試験に出題されうる内容
 - 選択肢は必ず3つ
-- 難易度は標準的（合否ライン付近）
+- 難易度は標準的
 - 問題が重複しないよう多様なトピックを選ぶ
 
 以下のJSON形式のみで返答してください（コードブロックや説明文は一切不要）：
@@ -312,107 +295,112 @@ async function generateQuestions(subject, count) {
   }
 ]`;
 
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1000,
-      messages: [{ role: "user", content: prompt }]
-    })
-  });
+    const res = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.8 }
+        })
+      }
+    );
 
-  if (!res.ok) throw new Error("APIエラー: " + res.status);
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || "APIエラー: " + res.status);
+    }
 
-  const data = await res.json();
-  const text = data.content.map(c => c.text || "").join("");
-  const clean = text.replace(/```json|```/g, "").trim();
-  const parsed = JSON.parse(clean);
-  if (!Array.isArray(parsed) || parsed.length === 0) throw new Error("問題の解析に失敗しました");
-  return parsed;
-}
+    const data = await res.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    const clean = text.replace(/```json|```/g, "").trim();
+    const parsed = JSON.parse(clean);
+    if (!Array.isArray(parsed) || parsed.length === 0) throw new Error("問題の解析に失敗しました");
+    return parsed;
+  }
 
-function render() {
-  const q = questions[current];
-  const total = questions.length;
-  document.getElementById("subject-label").textContent = selectedSubject;
-  document.getElementById("progress-fill").style.width = (current / total * 100) + "%";
-  document.getElementById("progress-text").textContent = (current + 1) + " / " + total;
-  document.getElementById("question-text").textContent = q.question;
+  function render() {
+    const q = questions[current];
+    const total = questions.length;
+    document.getElementById("subject-label").textContent = selectedSubject;
+    document.getElementById("progress-fill").style.width = (current / total * 100) + "%";
+    document.getElementById("progress-text").textContent = (current + 1) + " / " + total;
+    document.getElementById("question-text").textContent = q.question;
 
-  const choicesEl = document.getElementById("choices");
-  choicesEl.innerHTML = "";
-  q.choices.forEach((c, i) => {
-    const btn = document.createElement("button");
-    btn.className = "choice-btn";
-    btn.innerHTML = '<span class="choice-label">' + labels[i] + '</span>' + c;
-    btn.onclick = () => select(i);
-    choicesEl.appendChild(btn);
-  });
+    const choicesEl = document.getElementById("choices");
+    choicesEl.innerHTML = "";
+    q.choices.forEach((c, i) => {
+      const btn = document.createElement("button");
+      btn.className = "choice-btn";
+      btn.innerHTML = '<span class="choice-label">' + labels[i] + '</span>' + c;
+      btn.onclick = () => select(i);
+      choicesEl.appendChild(btn);
+    });
 
-  const exp = document.getElementById("explanation");
-  exp.style.display = "none";
-  exp.className = "explanation";
-  document.getElementById("next-btn").style.display = "none";
-  answered = false;
-}
+    const exp = document.getElementById("explanation");
+    exp.style.display = "none";
+    exp.className = "explanation";
+    document.getElementById("next-btn").style.display = "none";
+    answered = false;
+  }
 
-function select(idx) {
-  if (answered) return;
-  answered = true;
-  const q = questions[current];
-  const btns = document.querySelectorAll(".choice-btn");
-  btns.forEach((btn, i) => {
-    if (i === q.answer) btn.classList.add("correct");
-    else if (i === idx) btn.classList.add("wrong");
-    btn.onclick = null;
-  });
+  function select(idx) {
+    if (answered) return;
+    answered = true;
+    const q = questions[current];
+    const btns = document.querySelectorAll(".choice-btn");
+    btns.forEach((btn, i) => {
+      if (i === q.answer) btn.classList.add("correct");
+      else if (i === idx) btn.classList.add("wrong");
+      btn.onclick = null;
+    });
 
-  const correct = idx === q.answer;
-  userAnswers.push({ idx, correct });
+    const correct = idx === q.answer;
+    userAnswers.push({ idx, correct });
 
-  const exp = document.getElementById("explanation");
-  exp.style.display = "block";
-  exp.className = "explanation " + (correct ? "correct" : "wrong");
-  document.getElementById("exp-title").textContent = correct ? "✓ 正解！" : "✗ 不正解";
-  document.getElementById("exp-title").style.color = correct ? "#15803d" : "#c2410c";
-  document.getElementById("exp-text").textContent = q.explanation;
+    const exp = document.getElementById("explanation");
+    exp.style.display = "block";
+    exp.className = "explanation " + (correct ? "correct" : "wrong");
+    document.getElementById("exp-title").textContent = correct ? "✓ 正解！" : "✗ 不正解";
+    document.getElementById("exp-title").style.color = correct ? "#15803d" : "#c2410c";
+    document.getElementById("exp-text").textContent = q.explanation;
 
-  const nextBtn = document.getElementById("next-btn");
-  nextBtn.style.display = "block";
-  nextBtn.textContent = current + 1 < questions.length ? "次の問題へ →" : "結果を見る →";
-}
+    const nextBtn = document.getElementById("next-btn");
+    nextBtn.style.display = "block";
+    nextBtn.textContent = current + 1 < questions.length ? "次の問題へ →" : "結果を見る →";
+  }
 
-function nextQuestion() {
-  current++;
-  if (current < questions.length) { render(); }
-  else { showResult(); }
-}
+  function nextQuestion() {
+    current++;
+    if (current < questions.length) { render(); }
+    else { showResult(); }
+  }
 
-function showResult() {
-  show("result");
-  const score = userAnswers.filter(a => a.correct).length;
-  const total = questions.length;
-  document.getElementById("result-icon").textContent = score === total ? "🏆" : score >= total * 0.6 ? "📘" : "📝";
-  document.getElementById("score-num").textContent = score;
-  document.getElementById("score-total").textContent = " / " + total;
-  document.getElementById("score-label").textContent =
-    score === total ? "パーフェクト！素晴らしい！" : score >= total * 0.6 ? "合格ライン突破！" : "もう少し復習しましょう";
+  function showResult() {
+    show("result");
+    const score = userAnswers.filter(a => a.correct).length;
+    const total = questions.length;
+    document.getElementById("result-icon").textContent = score === total ? "🏆" : score >= total * 0.6 ? "📘" : "📝";
+    document.getElementById("score-num").textContent = score;
+    document.getElementById("score-total").textContent = " / " + total;
+    document.getElementById("score-label").textContent =
+      score === total ? "パーフェクト！素晴らしい！" : score >= total * 0.6 ? "合格ライン突破！" : "もう少し復習しましょう";
 
-  const list = document.getElementById("review-list");
-  list.innerHTML = "";
-  questions.forEach((q, i) => {
-    const a = userAnswers[i];
-    const item = document.createElement("div");
-    item.className = "review-item " + (a.correct ? "correct" : "wrong");
-    item.innerHTML =
-      '<span class="review-badge ' + (a.correct ? "correct" : "wrong") + '">' + (a.correct ? "✓ 正解" : "✗ 不正解") + '</span>' +
-      '<p class="review-q">Q' + (i+1) + '. ' + q.question + '</p>' +
-      (!a.correct ? '<p class="review-answer">正解：' + q.choices[q.answer] + '</p>' : '') +
-      '<p class="review-exp">' + q.explanation + '</p>';
-    list.appendChild(item);
-  });
-}
+    const list = document.getElementById("review-list");
+    list.innerHTML = "";
+    questions.forEach((q, i) => {
+      const a = userAnswers[i];
+      const item = document.createElement("div");
+      item.className = "review-item " + (a.correct ? "correct" : "wrong");
+      item.innerHTML =
+        '<span class="review-badge ' + (a.correct ? "correct" : "wrong") + '">' + (a.correct ? "✓ 正解" : "✗ 不正解") + '</span>' +
+        '<p class="review-q">Q' + (i+1) + '. ' + q.question + '</p>' +
+        (!a.correct ? '<p class="review-answer">正解：' + q.choices[q.answer] + '</p>' : '') +
+        '<p class="review-exp">' + q.explanation + '</p>';
+      list.appendChild(item);
+    });
+  }
 </script>
 </body>
 </html>
